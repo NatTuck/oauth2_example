@@ -7,7 +7,7 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :oauth2_example, OAuth2Example.Endpoint,
-  http: [port: 4000],
+  http: [port: 4400],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -36,9 +36,9 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :oauth2_example, OAuth2Example.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "oauth2_example_dev",
+  username: "ghauth",
+  password: "Xohth6Shei3y",
+  database: "ghauth_dev",
   hostname: "localhost",
   pool_size: 10
 
