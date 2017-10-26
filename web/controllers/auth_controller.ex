@@ -1,5 +1,6 @@
 defmodule OAuth2Example.AuthController do
   use OAuth2Example.Web, :controller
+  alias OAuth2Example.User
 
   @doc """
   This action is reached via `/auth/:provider` and redirects to the OAuth2 provider
@@ -29,6 +30,10 @@ defmodule OAuth2Example.AuthController do
     # Request the user's data with the access token
     user = get_user!(provider, client)
 
+    User.insert_or_update(user)
+
+    # Store the token in the "database"
+
     # Store the user in the session under `:current_user` and redirect to /.
     # In most cases, we'd probably just store the user's ID that can be used
     # to fetch from the database. In this case, since this example app has no
@@ -42,7 +47,7 @@ defmodule OAuth2Example.AuthController do
     |> redirect(to: "/")
   end
 
-  defp authorize_url!("github"),   do: GitHub.authorize_url!
+  defp authorize_url!("github"),   do: GitHub.authorize_url!(scope: "user, repo")
   defp authorize_url!("google"),   do: Google.authorize_url!(scope: "https://www.googleapis.com/auth/userinfo.email")
   defp authorize_url!("facebook"), do: Facebook.authorize_url!(scope: "user_photos")
   defp authorize_url!(_), do: raise "No matching provider available"
@@ -54,11 +59,11 @@ defmodule OAuth2Example.AuthController do
 
   defp get_user!("github", client) do
     %{body: user} = OAuth2.Client.get!(client, "/user")
-    %{name: user["name"], avatar: user["avatar_url"]}
+    %{name: user["name"], avatar: user["avatar_url"], token: client.token.access_token}
   end
   defp get_user!("google", client) do
     {:ok, %{body: user}} = OAuth2.Client.get!(client, "https://www.googleapis.com/plus/v1/people/me/openIdConnect")
-    %{name: user["name"], avatar: user["picture"]}
+    %{name: user["name"], avatar: user["picture"], token: client.token.access_token}
   end
   defp get_user!("facebook", client) do
     {:ok, %{body: user}} = OAuth2.Client.get!(client, "/me", fields: "id,name")

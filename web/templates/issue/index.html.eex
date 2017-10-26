@@ -1,0 +1,26 @@
+<h2>Listing issues</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Body</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for issue <- @issues do %>
+    <tr>
+      <td><%= issue["title"] %></td>
+      <td><%= issue["body"] %></td>
+
+      <td class="text-right">
+        <%= link "Delete", to: issue_path(@conn, :delete, issue["id"]), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New issue", to: issue_path(@conn, :new) %>

@@ -14,6 +14,7 @@ defmodule OAuth2Example.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    resources "/issues", IssueController
   end
 
   scope "/auth", OAuth2Example do
